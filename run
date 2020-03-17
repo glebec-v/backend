@@ -1,0 +1,38 @@
+#!/usr/bin/env php
+<?php
+
+include __DIR__.'/vendor/autoload.php';
+
+$params = getopt('i:d:b:');
+
+if (isset($params['i'])) {
+    $isoCode = $params['i'];
+} else {
+    exit('undefined currency code');
+}
+
+if (isset($params['d'])) {
+    $dateString = $params['d'];
+} else {
+    exit('undefined date');
+}
+$baseCode = $params['b'] ?? '';
+
+try {
+    $date = new DateTimeImmutable($dateString);
+
+    // init
+    $client = \Symfony\Component\HttpClient\HttpClient::create();
+    $cache = new \Symfony\Component\Cache\Adapter\FilesystemAdapter();
+    $cbrPort = new \CbrPort\CbrPort($client);
+    $dataProvider = new \Service\Provider($cache, $cbrPort);
+    $formatter = new \Output\ResponseFormatter();
+    $rateService = new \Service\Rate($dataProvider, $formatter);
+
+    // run
+    $result = $rateService->getRate($date, $isoCode, $baseCode);
+} catch (\Exception $exception) {
+    echo $exception->getTraceAsString();
+}
+
+echo $result.PHP_EOL;

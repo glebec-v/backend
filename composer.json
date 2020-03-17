@@ -1,0 +1,19 @@
+{
+  "name": "glebec-v/tradernet-test",
+  "description": "test currency service",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Gleb Vorotilov",
+      "email": "gvorotilov@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {"": "src/"}
+  },
+  "require": {
+    "doctrine/dbal": "^2.10",
+    "symfony/cache": "^5.0",
+    "symfony/http-client": "^5.0"
+  }
+}
